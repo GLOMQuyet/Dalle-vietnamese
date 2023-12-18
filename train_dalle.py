@@ -468,13 +468,16 @@ if is_root:
         heads=HEADS,
         dim_head=DIM_HEAD
     )
-
-    run = wandb.init(
-        project=args.wandb_name,
-        entity=args.wandb_entity,
-        resume=False,
-        config=model_config,
-    )
+    # Kiểm tra xem môi trường hiện tại có phải là 'kaggle' hay không
+    if 'KAGGLE_KERNEL_RUN_TYPE' in os.environ:
+        print("Running on Kaggle")
+    else:
+	run = wandb.init(
+	    project=args.wandb_name,
+	    entity=args.wandb_entity,
+	    resume=False,
+	    config=model_config,
+	    )
 
 # distribute
 
