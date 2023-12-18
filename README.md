@@ -642,18 +642,18 @@ $ yttm bpe --vocab_size 8000 --data ./path/to/big/text/file.txt --model ./path/t
 
 That's it! The BPE model file is now saved to `./path/to/bpe.model` and you can begin training!
 
-#### Chinese
+#### Vietnamese
 
-You can train with a <a href="https://huggingface.co/bert-base-chinese">pretrained chinese tokenizer</a> offered by Huggingface 🤗 by simply passing in an extra flag `--chinese`
+You can train with a <a href="https://huggingface.co/vinai/phobert-base-v2">pretrained vietnamese tokenizer</a> offered by Huggingface 🤗 by simply passing in an extra flag `--vietnamese`
 
 ex.
 
 ```sh
-$ python train_dalle.py --chinese --image_text_folder ./path/to/data
+$ python train_dalle.py --vietnamese --image_text_folder ./path/to/data
 ```
 
 ```sh
-$ python generate.py --chinese --text '追老鼠的猫'
+$ python generate.py --vietnamese --text 'chim ở biển'
 ```
 
 ## Citations
