@@ -24,7 +24,7 @@ import webdataset as wds
 from torchvision import transforms as T
 from PIL import Image
 from io import BytesIO
-
+os.environ["WANDB_MODE"] = "dryrun"
 
 # argument parsing
 
@@ -78,7 +78,7 @@ parser.add_argument('--amp', action='store_true',
 parser.add_argument('--wandb_name', default='dalle_train_transformer',
                     help='Name W&B will use when saving results.\ne.g. `--wandb_name "coco2017-full-sparse"`')
 
-parser.add_argument('--wandb_entity', default=2,
+parser.add_argument('--wandb_entity', default='nonesa',
                     help='(optional) Name of W&B team/entity to log to.')
 
 parser.add_argument('--stable_softmax', dest='stable_softmax', action='store_true',
@@ -460,7 +460,6 @@ if LR_DECAY:
         scheduler.load_state_dict(scheduler_state)
 
 # experiment tracker
-
 if is_root:
 
     model_config = dict(
@@ -468,19 +467,15 @@ if is_root:
         heads=HEADS,
         dim_head=DIM_HEAD
     )
-    # Kiểm tra xem môi trường hiện tại có phải là 'kaggle' hay không
-    if 'KAGGLE_KERNEL_RUN_TYPE' in os.environ:
-        print("Running on Kaggle")
-    else:
-	run = wandb.init(
-	    project=args.wandb_name,
-	    entity=args.wandb_entity,
-	    resume=False,
-	    config=model_config,
-	    )
+
+    run = wandb.init(
+        project=args.wandb_name,
+        entity=args.wandb_entity,
+        resume=True,
+        config=model_config,
+    )
 
 # distribute
-
 distr_backend.check_batch_size(BATCH_SIZE)
 deepspeed_config = {
     'train_batch_size': BATCH_SIZE,
@@ -584,7 +579,6 @@ def save_model(path, epoch=0):
     }
 
     torch.save(save_obj, path)
-
 def save_artifact(model_config, model_path, name = 'trained-dalle'):
     model_artifact = wandb.Artifact(name, type='model', metadata=dict(model_config))
     model_artifact.add_file(model_path)
@@ -594,7 +588,6 @@ def save_artifact(model_config, model_path, name = 'trained-dalle'):
 
 # Saves a checkpoint before training begins to fail early when mis-configured.
 # See https://github.com/lucidrains/DALLE-pytorch/wiki/DeepSpeed-Checkpoints
-
 save_model(DALLE_OUTPUT_FILE_NAME, epoch=resume_epoch)
 
 for epoch in range(resume_epoch, EPOCHS):
