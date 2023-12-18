@@ -78,7 +78,7 @@ parser.add_argument('--amp', action='store_true',
 parser.add_argument('--wandb_name', default='dalle_train_transformer',
                     help='Name W&B will use when saving results.\ne.g. `--wandb_name "coco2017-full-sparse"`')
 
-parser.add_argument('--wandb_entity', default=None,
+parser.add_argument('--wandb_entity', default=2,
                     help='(optional) Name of W&B team/entity to log to.')
 
 parser.add_argument('--stable_softmax', dest='stable_softmax', action='store_true',
