@@ -6,7 +6,7 @@ import torch
 import youtokentome as yttm
 from tokenizers import Tokenizer
 from tokenizers.processors import ByteLevel
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 
 import html
 import os
@@ -191,11 +191,11 @@ class HugTokenizer:
 
         return result
 
-# chinese tokenizer
+# vietnamese tokenizer
 
-class ChineseTokenizer:
+class VietnameseTokenizer:
     def __init__(self):
-        tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
+        tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
         self.tokenizer = tokenizer
         self.vocab_size = tokenizer.vocab_size
 

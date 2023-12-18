@@ -17,7 +17,7 @@ from torchvision.utils import make_grid, save_image
 
 from dalle_pytorch import __version__
 from dalle_pytorch import DiscreteVAE, OpenAIDiscreteVAE, VQGanVAE, DALLE
-from dalle_pytorch.tokenizer import tokenizer, HugTokenizer, YttmTokenizer, ChineseTokenizer
+from dalle_pytorch.tokenizer import tokenizer, HugTokenizer, YttmTokenizer, VietnameseTokenizer
 
 # argument parsing
 
@@ -70,8 +70,8 @@ def exists(val):
 if exists(args.bpe_path):
     klass = HugTokenizer if args.hug else YttmTokenizer
     tokenizer = klass(args.bpe_path)
-elif args.chinese:
-    tokenizer = ChineseTokenizer()
+elif args.vietnamese:
+    tokenizer = VietnameseTokenizer()
 
 # load DALL-E
 

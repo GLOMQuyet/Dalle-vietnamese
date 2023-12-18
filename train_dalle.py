@@ -16,7 +16,7 @@ from dalle_pytorch import __version__
 from dalle_pytorch import OpenAIDiscreteVAE, VQGanVAE, DiscreteVAE, DALLE
 from dalle_pytorch import distributed_utils
 from dalle_pytorch.loader import TextImageDataset
-from dalle_pytorch.tokenizer import tokenizer, HugTokenizer, ChineseTokenizer, YttmTokenizer
+from dalle_pytorch.tokenizer import tokenizer, HugTokenizer, VietnameseTokenizer, YttmTokenizer
 
 # libraries needed for webdataset support
 
@@ -56,7 +56,7 @@ parser.add_argument('--truncate_captions', dest='truncate_captions', action='sto
 parser.add_argument('--random_resize_crop_lower_ratio', dest='resize_ratio', type=float, default=0.75,
                     help='Random resized crop lower ratio')
 
-parser.add_argument('--chinese', dest='chinese', action='store_true')
+parser.add_argument('--vietnamese', dest='vietnamese', action='store_true')
 
 parser.add_argument('--taming', dest='taming', action='store_true')
 
@@ -90,19 +90,19 @@ train_group = parser.add_argument_group('Training settings')
 
 train_group.add_argument('--flops_profiler', dest = 'flops_profiler', action='store_true', help = 'Exits after printing detailed flops/runtime analysis of forward/backward')
 
-train_group.add_argument('--epochs', default = 20, type = int, help = 'Number of epochs')
+train_group.add_argument('--epochs', default = 50, type = int, help = 'Number of epochs')
 
 train_group.add_argument('--save_every_n_steps', default = 1000, type = int, help = 'Save a checkpoint every n steps')
 
 train_group.add_argument('--keep_n_checkpoints', default = None, type = int, help = '(Careful) Deletes old deepspeed checkpoints if there are more than n')
 
-train_group.add_argument('--batch_size', default = 4, type = int, help = 'Batch size')
+train_group.add_argument('--batch_size', default = 16, type = int, help = 'Batch size')
 
 train_group.add_argument('--ga_steps', default = 1, type = int, help = 'Number of steps to accumulate gradients across per each iteration. DeepSpeed only.')
 
 train_group.add_argument('--learning_rate', default = 3e-4, type = float, help = 'Learning rate')
 
-train_group.add_argument('--clip_grad_norm', default = 0.5, type = float, help = 'Clip gradient norm')
+train_group.add_argument('--clip_grad_norm', default = 1.0, type = float, help = 'Clip gradient norm')
 
 train_group.add_argument('--lr_decay', dest = 'lr_decay', action = 'store_true')
 
@@ -137,6 +137,7 @@ model_group.add_argument('--shared_attn_ids', default = None, type = str, help =
 model_group.add_argument('--shared_ff_ids', default = None, type = str, help = 'Comma separated list of shared feed forward layer ids. Default: sharing is disabled')
 
 model_group.add_argument('--share_input_output_emb', help = 'Share input and output embeddings', action = 'store_true')
+
 
 args = parser.parse_args()
 
@@ -238,8 +239,8 @@ is_root = distr_backend.is_root_worker()
 if exists(args.bpe_path):
     klass = HugTokenizer if args.hug else YttmTokenizer
     tokenizer = klass(args.bpe_path)
-elif args.chinese:
-    tokenizer = ChineseTokenizer()
+elif args.vietnamese:
+    tokenizer = VietnameseTokenizer()
 
 # reconstitute vae
 
@@ -674,3 +675,4 @@ if is_root:
     wandb.save(DALLE_OUTPUT_FILE_NAME)
     save_artifact(model_config, DALLE_OUTPUT_FILE_NAME)
     wandb.finish()
+
