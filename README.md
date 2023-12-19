@@ -649,11 +649,11 @@ You can train with a <a href="https://huggingface.co/vinai/phobert-base-v2">pret
 ex.
 
 ```sh
-$ python train_dalle.py --vietnamese --image_text_folder ./path/to/data
+$ python train_dalle.py --vietnamese --image_text_folder ./path/to/data --taming
 ```
 
 ```sh
-$ python generate.py --vietnamese --text 'chim ở biển'
+$ python generate.py --vietnamese --text "một con chim nhỏ màu vàng và đen với cái mỏ đen" --dalle_path ./dalle.pt --taming
 ```
 
 ## Citations
