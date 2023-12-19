@@ -1,0 +1,6 @@
+axial_positional_embedding
+einops
+omegaconf
+dalle-pytorch
+pytorch-lightning==1.6.5
+wandb
